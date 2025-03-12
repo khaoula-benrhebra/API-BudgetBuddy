@@ -68,7 +68,7 @@ public function destroy(Expense $expense)
         'tags.*' => 'exists:tags,id'
     ]);
 
-    $expense->tags()->sync($request->tags);
+    $expense->tags()->attach($request->tags);
 
         return response()->json($expense->load('tags'));
    }

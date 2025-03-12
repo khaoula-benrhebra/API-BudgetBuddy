@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tag;
+use App\Http\Resources\Admin\TagResource;
 use Illuminate\Http\Request;
 
 class TagController extends Controller
@@ -14,7 +15,7 @@ class TagController extends Controller
 
         $tag = Tag::create(['name' => $request->name]);
 
-        return response()->json($tag, 201);
+        return new TagResource($tag);
     }
 
     public function update(Request $request, Tag $tag)
@@ -35,7 +36,7 @@ class TagController extends Controller
 
     public function index()
     {
-        return response()->json(Tag::all());
+        return TagResource::collection(Tag::all());
     }
 
     public function show(Tag $tag)
