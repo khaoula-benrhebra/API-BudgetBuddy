@@ -4,7 +4,7 @@ namespace App\Http\Resources\Admin;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TagResource extends JsonResource
+class ExpenseResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +15,14 @@ class TagResource extends JsonResource
     public function toArray($request)
     {
         return [
-            // 'id' => $this->id,
+            'id' => $this->id,
             'name' => $this->name,
-            // 'created_at' => $this->created_at,
-            // 'updated_at' => $this->updated_at,
+            'amount' => $this->amount,
+            'user_id' => $this->user_id,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            // 'tags' => TagResource::collection($this->whenLoaded('tags')),
+            'tags' => TagResource::collection($this->tags),
         ];
     }
 }

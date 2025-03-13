@@ -24,7 +24,7 @@ class TagController extends Controller
 
         $tag->update($request->only('name'));
 
-        return response()->json($tag);
+        return new TagResource($tag);
     }
 
     public function destroy(Tag $tag)
@@ -41,7 +41,6 @@ class TagController extends Controller
 
     public function show(Tag $tag)
     {
-        return response()->json($tag);
+        return new TagResource($tag);
     }
 }
-
