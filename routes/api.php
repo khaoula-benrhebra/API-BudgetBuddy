@@ -47,3 +47,10 @@ Route::middleware('auth:sanctum')->prefix('tags')->group(function () {
 });
 
 
+use App\Http\Controllers\GroupController;
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('groups', GroupController::class);
+});
+
+

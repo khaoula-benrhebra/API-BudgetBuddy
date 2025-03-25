@@ -23,6 +23,11 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function groups() {
+        return $this->belongsToMany(Group::class, 'group_user');
+    }
+    
+
     
     public function expenses(){
         

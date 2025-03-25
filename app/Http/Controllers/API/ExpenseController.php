@@ -6,9 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Expense;
 use App\Models\Tag;
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\Admin\ExpenseResource;
+use App\Http\Resources\ExpenseResource;
 
 class ExpenseController extends Controller
 {
