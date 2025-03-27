@@ -1,47 +1,52 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Resources\GroupResource;
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\GroupResource;
 
-class GroupController extends Controller {
-    
-    public function index() {
-        return GroupResource::collection(Auth::user()->groups);
-    }
-
-    public function store(Request $request) {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'currency' => 'string|max:10',
+class GroupController extends Controller
+{
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'devise' => 'required|string',
+            'members' => 'required|array', 
         ]);
 
         $group = Group::create([
-            'name' => $request->name,
-            'currency' => $request->currency ?? 'EUR',
+            'name' => $validated['name'],
+            'devise' => $validated['devise'],
         ]);
 
-        $group->users()->attach(Auth::id());
+        $group->users()->attach($validated['members']);
 
         return new GroupResource($group);
     }
 
-    public function show(Group $group) {
-        if (!$group->users->contains(Auth::id())) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+    public function index()
+    {
+        $groups = auth()->user()->groups;
+        return GroupResource::collection($groups);
+    }
+
+    public function show($id)
+    {
+        $group = Group::findOrFail($id);
         return new GroupResource($group);
     }
 
-    public function destroy(Group $group) {
-        if (!$group->users->contains(Auth::id())) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+    public function destroy($id)
+    {
+        $group = Group::findOrFail($id);
+
+        if ($group->expenses->isEmpty()) {
+            $group->delete();
+            return response()->json(null, 204);
         }
 
-        // Vérifier si le solde est à 0 avant suppression (ajout à faire)
-        $group->delete();
-        return response()->json(['message' => 'Groupe supprimé'], 200);
+        return response()->json(['message' => 'Cannot delete group with existing balances'], 400);
     }
 }

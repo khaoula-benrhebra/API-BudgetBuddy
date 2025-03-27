@@ -23,8 +23,9 @@ class User extends Authenticatable
         'password',
     ];
 
-    public function groups() {
-        return $this->belongsToMany(Group::class, 'group_user');
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class);
     }
     
 
@@ -52,4 +53,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function participants()
+    {
+        return $this->belongsToMany(User::class, 'expense_participants')
+            ->withPivot('amount_paid', 'split_type');
+    }
+  
+
 }

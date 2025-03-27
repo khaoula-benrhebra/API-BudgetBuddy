@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ExpenseController;
 use App\Http\Controllers\API\TagController;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -36,6 +37,9 @@ Route::middleware('auth:sanctum')->prefix('expenses')->group(function () {
     Route::post('{expense}/tags', [ExpenseController::class, 'attachTagsToExpense']);
     Route::get('/', [ExpenseController::class, 'index']);
     Route::get('{expense}', [ExpenseController::class, 'show']);
+
+
+  
 });
 
 Route::middleware('auth:sanctum')->prefix('tags')->group(function () {
@@ -46,11 +50,29 @@ Route::middleware('auth:sanctum')->prefix('tags')->group(function () {
     Route::get('{tag}', [TagController::class, 'show']);
 });
 
+///groupes
 
 use App\Http\Controllers\GroupController;
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('groups', GroupController::class);
+    Route::post('/groups', [GroupController::class, 'store']);
+    Route::get('/groups', [GroupController::class, 'index']);
+    Route::get('/groups/{id}', [GroupController::class, 'show']);
+    Route::delete('/groups/{id}', [GroupController::class, 'destroy']);
 });
+
+
+
+
+//expenses partagées routes
+
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/groups/{groupId}/expenses', [ExpenseController::class, 'addGroupExpense']);
+    Route::get('/groups/{groupId}/expenses', [ExpenseController::class, 'listGroupExpenses']);
+    Route::delete('/groups/{groupId}/expenses/{expenseId}', [ExpenseController::class, 'deleteGroupExpense']);
+});
+
 
 
